@@ -1,3 +1,4 @@
+var $ = jQuery; 
 var socket;
 var id = Math.round($.now() * Math.random());
 var username = "user" + id;
@@ -341,7 +342,7 @@ $(function() {
         shadePickerCtx = $('#shadePicker')[0].getContext('2d');
 
         var cpImage = new Image();
-        cpImage.src = 'images/colorPicker2.png';
+        cpImage.src = 'Images/colorPicker2.png';
         var selectedColor;
         cpImage.onload = function() {
             colorPickerCtx.drawImage(cpImage, 0, 0);
@@ -351,7 +352,7 @@ $(function() {
             //updateShadePicker(selectedColor);
 
             var spImage = new Image();
-            spImage.src = 'images/shadePicker2.png';
+            spImage.src = 'Images/shadePicker2.png';
             spImage.onload = function() {
                 var data = colorPickerCtx.getImageData(200, 20, 1, 1).data;
                 selectedColor = rgbToHex(data[0], data[1], data[2]);
@@ -470,7 +471,7 @@ $(function() {
         function updateShadePicker(newColor) {
 
             var spImage = new Image();
-            spImage.src = 'images/shadePicker2.png';
+            spImage.src = 'Images/shadePicker2.png';
             spImage.onload = function() {
                 shadePickerCtx.fillStyle = newColor;
                 shadePickerCtx.fillRect(3, 0, shadePickerCtx.canvas.width - 6, shadePickerCtx.canvas.height);
