@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Node.js Multiplayer Drawing Game | Tutorialzine Demo</title>
+
+        <!-- The stylesheets -->
+        <link rel="stylesheet" href="styles.css" />
+        <!-- JavaScript includes. Notice that socket.io.js is served by node.js -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+        <script src="script.js"></script>
+        <!--[if lt IE 9]>
+          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!--SLIDER STUFF-->
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+        <script type="text/javascript" src="farbtastic.js"></script>
+        <link rel="stylesheet" href="farbtastic.css" type="text/css" />
+
+        <style>
+            #content { padding: 5px; background:#ddd; border-radius:5px; overflow-y: scroll;
+                       border:1px solid #CCC; height: 457px; width: 250px; 
+                       position: absolute; top: 320px; left: 960px;}
+            #input { border-radius:2px; border:1px solid #ccc;
+                     margin-top:10px; padding:5px; width:215px;  
+                     position: absolute; top: 785px; left: 995px;
+                     background:#ddd}
+            #roomList { padding: 0px; background:#ddd; border-radius:5px; overflow-y: scroll;
+                        border:1px solid #CCC; height: 240px; width: 260px; 
+                        position: absolute; top: 62px; left: 960px;}
+
+
+        </style>
+
+    </head>
+
+    <body id ="body">
+
+        <!--[if IE]>
+<object id='wtPlugin' classid='CLSID:092dfa86-5807-5a94-bf3b-5a53ba9e5308' WIDTH=1 HEIGHT=1 style="position:absolute; left:100px; top:100px">
+</object>
+<![endif]--><!--[if !IE]> <-->
+        <object id="wtPlugin" type="application/x-wacomtabletplugin" WIDTH=1 HEIGHT=1 style="position:absolute; left:100px; top:100px">
+            <!-- <param name="onload" value="pluginLoaded" /> -->
+        </object>
+        <!--> <![endif]-->
+
+        <img src="images/black.png" style="opacity:0.1; position:absolute; top:10px; left:10px; height:210px; width:933px; border-radius:10px;" >
+        <!--<img src="images/white.png" style="opacity:0.6; position:absolute; top:10px; left:300px; height:210px; width:645px;" >-->
+        <img src="images/nameBanner2.png" style="position:absolute; top:10px; left:200px" >
+        
+        <form >
+            <div id="toolPicker" style ="position: fixed; top: 230px; left: 10px;">
+                <input type="radio" id="radio1" name="radio" checked="checked"/><label for="radio1">brush</label>
+                <input type="radio" id="radio2" name="radio" /><label for="radio2">eraser</label>
+            </div>
+        </form>
+
+        <!--<button id="save" style ="position: fixed; top: 10px; left: 175px;"> SAVE </button>-->
+        <!--<button id="eraser" onclick = "erase()" style ="position: fixed; top: 10px; left: 90px;"> eraser </button>-->
+        <button id="undo" style ="position: fixed; top: 230px; left: 175px; width:90px;"> undo </button>
+        <button id="redo" style ="position: fixed; top: 230px; left: 270px; width:90px;"> redo </button>
+        <button id="save" style ="position: fixed; top: 230px; left: 365px; width:90px;"> save </button>
+        <button id="replay" style ="position: fixed; top: 230px; left: 460px; width:90px;"> replay! </button>
+
+
+        <!--<button id="save" onclick = "save()" style ="position: fixed; top: 10px; left: 405px;"> save </button>-->
+        <button id="joinRoom" style ="position: fixed; top: 10px; left: 960px; width: 263px; height: 45px"> Create a new doodl! </button>
+
+        <button id="setUsername" onClick ="setUsername()" style ="position: fixed; top: 794px; left: 960px; width: 32px; height: 29px"> </button>
+
+
+        <label style="position:fixed; top:271px; left: 10px">size:</label>
+        <div id="sizeSlider" style ="position: fixed; top: 273px; left: 45px; width: 505px;"></div>
+
+        <label style="position:fixed; top:293px; left: 10px">opacity:</label>
+        <div id="opacitySlider" style ="position: fixed; top: 295px; left: 65px; width: 485px;"></div>
+
+        <canvas id="drawingCanvas" width="933" height="500" style="border:3px solid #c3c3c3; position: fixed; top: 320px; left: 10px;border-radius:10px"></canvas>
+
+        <div id="canvasses">
+            <!-- create other clients' temp canvasses here -->
+        </div>
+
+        <canvas id="tempCanvas" width="933" height="500" style="opacity:0.5; border:3px solid #c3c3c3; position: fixed; top: 320px; left: 10px; border-radius:10px"></canvas>
+
+        <canvas id="colorPreview" width="60" height="60" style="opacity:0.5; border:1px solid #c3c3c3; position: absolute; top: 240px; left: 562px; border-radius:5px"></canvas>
+        <canvas id="colorPicker" width="308" height="44" style="border:0px solid #c3c3c3; position: fixed; top: 230px; left: 635px; border-radius:5px"></canvas>
+        <canvas id="shadePicker" width="308" height="24" style="border:0px solid #c3c3c3; position: fixed; top: 283px; left: 635px; border-radius:5px"></canvas>
+
+        <canvas id="gradientOverlay" width="308" height="24" style="border:0px solid #c3c3c3; position: fixed; top: 283px; left: 635px;"></canvas>
+
+        <canvas id="colorSelector" width="308" height="44" style="border:0px solid #c3c3c3; position: fixed; top: 230px; left: 635px;border-radius:5px"></canvas>
+        <canvas id="shadeSelector" width="308" height="24" style="border:0px solid #c3c3c3; position: fixed; top: 283px; left: 635px;border-radius:5px"></canvas>
+
+        <div id="cursors">
+            <!-- The mouse pointers will be created here -->
+        </div>
+
+        <hgroup id="instructions">		
+            <h1>Welcome to Doodlr!</h1>
+            <h2>Start drawing or click on another doodl to join it!</h2>
+        </hgroup>
+
+        <div id="content"></div>
+        <div>
+            <input type="text" id="input" value="Click here to chat...">
+        </div>
+
+        <div id="roomList"></div>
+
+        <!--<hr style ="width:275px; position:absolute; top:312px; left:950px;">-->
+
+    </body>
+</html>
