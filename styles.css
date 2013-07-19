@@ -18,7 +18,7 @@
 
 
 html{
-	/*background:url('images/testy.png') repeat #e4e4e4;*/
+	/*background:url('Images/testy.png') repeat #e4e4e4;*/
 		
 	/* This will hide the extra canvas if the screen is small */
 	overflow:hidden;
@@ -88,7 +88,7 @@ h3{
 	position:absolute;
 	width:15px;
 	height:22px;
-	background:url('images/pointer.png') no-repeat -4px 0;
+	background:url('Images/pointer.png') no-repeat -4px 0;
 }
 
 
