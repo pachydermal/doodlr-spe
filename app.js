@@ -8,7 +8,8 @@ var app = require('http').createServer(handler),
 
 var fileServer = new static.Server('./');
 
-app.listen(8080);
+var port = process.env.PORT || 8080; 
+app.listen(port);
 
 function handler(request, response) {
 
@@ -93,6 +94,11 @@ printRooms();
 
 // Delete this row if you want to see debug messages
 io.set('log level', 1);
+
+io.configure(function () { 
+	  io.set("transports", ["xhr-polling"]); 
+	  io.set("polling duration", 10); 
+	});
 
 // Listen for incoming connections from clients
 io.sockets.on('connection', function(socket) {

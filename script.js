@@ -67,8 +67,7 @@ function getPressure() {
 $(function() {
 
     // The URL of your web server (the port is set in app.js)
-    var url = 'http://10.9.159.208:8080';
-    socket = io.connect(url);
+    socket = io.connect();
 
     var chatContent = $('#content');
     wPlugin = getWacomPlugin();
